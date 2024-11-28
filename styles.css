@@ -1,0 +1,185 @@
+/* Общие стили */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+footer {
+    position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+}
+
+/* Заголовок */
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.4rem;
+}
+
+.action-buttons {
+    margin-top: 10px;
+}
+
+.action-buttons .btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.primary-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+.danger-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+}
+
+.primary-btn:hover {
+    background-color: #0056b3;
+}
+
+.danger-btn:hover {
+    background-color: #c82333;
+}
+
+/* Основной контент */
+main {
+    padding: 20px;
+}
+
+.product-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.product-item {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    width: 300px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transition: transform 0.2s ease-in-out;
+}
+
+.product-item:hover {
+    transform: scale(1.02);
+}
+
+.product-info p {
+    margin: 5px 0;
+}
+
+.delete-checkbox {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    cursor: pointer;
+}
+
+.no-products {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #999;
+}
+
+/* Подвал */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .product-item {
+        width: 90%;
+    }
+}
+
+/* Общий стиль кнопок */
+.btn {
+    display: inline-block;
+    padding: 12px 25px; /* Увеличенные отступы */
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 8px; /* Более плавные углы */
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Тень для эффекта "возвышенности" */
+}
+
+/* Кнопка "ADD" (основная) */
+.primary-btn {
+    background-color: #28a745; /* Ярко-зеленый */
+    color: #ffffff;
+}
+
+.primary-btn:hover {
+    background-color: #218838; /* Более насыщенный зеленый при наведении */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Усиленная тень при наведении */
+    transform: translateY(-2px); /* Эффект поднятия */
+}
+
+/* Кнопка "MASS DELETE" (удаление) */
+.danger-btn {
+    background-color: #dc3545; /* Ярко-красный */
+    color: #ffffff;
+}
+
+.danger-btn:hover {
+    background-color: #c82333; /* Более насыщенный красный при наведении */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Усиленная тень при наведении */
+    transform: translateY(-2px); /* Эффект поднятия */
+}
+
+/* Дополнительные улучшения */
+.action-buttons {
+    display: flex;
+    justify-content: center; /* Центрируем кнопки */
+    gap: 20px; /* Отступы между кнопками */
+    margin-top: 20px;
+}
+
+.action-buttons .btn:active {
+    transform: translateY(2px); /* Эффект нажатия */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+
+
+
