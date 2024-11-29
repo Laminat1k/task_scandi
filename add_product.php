@@ -1,49 +1,78 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-require_once "Database.php";
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $sku = $_POST['sku'];
-    $name = $_POST['name'];
-    $price = $_POST['price'];
-    $type = $_POST['productType'];
 
-    $size = $_POST['size'] ?? null;
-    $weight = $_POST['weight'] ?? null;
-    $height = $_POST['height'] ?? null;
-    $width = $_POST['width'] ?? null;
-    $length = $_POST['length'] ?? null;
+require_once "classes/Database.php";
+require_once "classes/ProductFactory.php";
 
-    $dimensions = $type === 'Furniture' ? $height . 'x' . $width . 'x' . $length : null;
+function validateInput($data) {
+    $errors = [];
 
-    $database = new Database();
-    $conn = $database->getConnection();
-
-    $query = "INSERT INTO products (sku, name, price, type, size_mb, weight_kg, dimensions) 
-              VALUES (:sku, :name, :price, :type, :size, :weight, :dimensions)";
-    $stmt = $conn->prepare($query);
-
-    $stmt->bindParam(':sku', $sku);
-    $stmt->bindParam(':name', $name);
-    $stmt->bindParam(':price', $price);
-    $stmt->bindParam(':type', $type);
-    $stmt->bindParam(':size', $size);
-    $stmt->bindParam(':weight', $weight);
-    $stmt->bindParam(':dimensions', $dimensions);
-
-    // Проверка выполнения запроса
-    if ($stmt->execute()) {
-        echo "Product added successfully!";
-        header("Location: index.php");
-        exit;
-    } else {
-        $errorInfo = $stmt->errorInfo();
-        echo "Error: Unable to save product. " . $errorInfo[2];
+    if (empty($data['sku'])) {
+        $errors[] = "SKU is required.";
     }
+
+    if (empty($data['name'])) {
+        $errors[] = "Name is required.";
+    }
+
+    if (!isset($data['price']) || !is_numeric($data['price']) || $data['price'] <= 0) {
+        $errors[] = "Price must be a positive number.";
+    }
+
+    if ($data['productType'] === 'DVD' && 
+        (!isset($data['size']) || !is_numeric($data['size']) || $data['size'] <= 0)) {
+        $errors[] = "Size must be a positive number.";
+    }
+
+    if ($data['productType'] === 'Book' && 
+        (!isset($data['weight']) || !is_numeric($data['weight']) || $data['weight'] <= 0)) {
+        $errors[] = "Weight must be a positive number.";
+    }
+
+    if ($data['productType'] === 'Furniture') {
+        $dimensions = ['height', 'width', 'length'];
+        foreach ($dimensions as $dimension) {
+            if (!isset($data[$dimension]) || !is_numeric($data[$dimension]) || $data[$dimension] <= 0) {
+                $errors[] = ucfirst($dimension) . " must be a positive number.";
+            }
+        }
+    }
+
+    return $errors;
 }
 
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Валидируем данные
+    $errors = validateInput($_POST);
+
+    if (!empty($errors)) {
+        // Выводим ошибки
+        echo "Validation errors:<br>";
+        foreach ($errors as $error) {
+            echo "- $error<br>";
+        }
+    } else {
+        // Если ошибок нет, сохраняем данные
+        $database = new Database();
+        $conn = $database->getConnection();
+
+        // Создаем продукт через фабрику
+        $product = ProductFactory::createProduct($_POST);
+
+        // Сохраняем продукт
+        if ($product->save($conn)) {
+            header("Location: index.php");
+            exit;
+        } else {
+            header("Location: index.php");
+        }
+    }
+}
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -51,10 +80,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Подключите стили -->
+    <link rel="stylesheet" href="assets/style3.css"> <!-- Подключите стили -->
 </head>
 
-<script src="script.js" defer></script>
+<script src="assets/script.js" defer></script>
 
 <body>
     <header>
@@ -89,117 +118,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </form>
 
     </main>
-    <style>
-        /* Основной стиль */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-        }
-
-        header {
-            background-color: #4CAF50;
-            color: white;
-            text-align: center;
-            padding: 1rem;
-        }
-
-        main {
-            margin: 2rem auto;
-            max-width: 600px;
-            background: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        form {
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        label {
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-label, input, select {
-    margin-left: 1rem; 
-}
-
-        input, select, button {
-            padding: 0.75rem;
-            font-size: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            outline: none;
-        }
-
-        input:focus, select:focus {
-            border-color: #4CAF50;
-        }
-
-        button {
-            background-color: #4CAF50;
-            color: white;
-            font-size: 1rem;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .btn {
-            display: inline-block;
-            text-align: center;
-            background-color: #d9534f;
-            color: white;
-            text-decoration: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-
-        .btn:hover {
-            background-color: #c9302c;
-        }
-
-        #type-specific-fields {
-            margin-top: 1rem;
-        }
-
-        Ы
-
-        footer {
-            text-align: center;
-            padding: 1rem;
-            background-color: #333;
-            color: white;
-            margin-top: 2rem;
-        }
-        /* Выравнивание динамических полей */
-#type-specific-fields {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem; /* Расстояние между полями */
-}
-
-#type-specific-fields label {
-    flex: 1 0 100%; /* Метки занимают всю ширину строки */
-}
-
-#type-specific-fields input {
-    flex: 1; /* Поля равной ширины */
-    min-width: 120px; /* Минимальная ширина для маленьких экранов */
-}
-
-    </style>
     
 </body>
 <footer>

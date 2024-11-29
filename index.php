@@ -1,6 +1,6 @@
 <?php
 // Подключение к базе данных
-require_once "Database.php";
+require_once "classes/Database.php";
 
 // Создание объекта Database и получение соединения
 $database = new Database();
@@ -22,14 +22,14 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product List</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Укажите путь к CSS -->
+    <link rel="stylesheet" href="assets/styles.css"> <!-- Укажите путь к CSS -->
 </head>
 <body>
 <header>
     <h1>Product List</h1>
     <div class="action-buttons">
 
-        <a href="/other/add_product.php" class="btn primary-btn">Add</a>
+        <a href="add_product.php" class="btn primary-btn">Add</a>
         <button id="delete-product-btn" class="btn danger-btn" type="submit" form="product-list">Mass Delete</button>
         <input type="checkbox" id="select-all" /> Select All
     </div>
@@ -38,7 +38,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <main>
         <!-- Форма для массового удаления продуктов -->
-        <form method="POST" action="delete_products.php" id="product-list">
+        <form method="POST" action="classes/delete_products.php" id="product-list">
             <div class="product-container">
                 <!-- Добавление чекбоксов для каждого продукта -->
                 <?php if (count($products) > 0): ?>
