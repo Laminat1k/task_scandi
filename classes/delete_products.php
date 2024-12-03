@@ -34,7 +34,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['delete']) && !empty($
         echo "<p>Error: " . $e->getMessage() . "</p>";
     }
 } else {
-    // Если не выбраны товары
-    echo "<p>No products selected for deletion.</p>";
+    // Если не выбраны товары, отображаем сообщение
+    if ($_SERVER["REQUEST_METHOD"] === "POST") {
+        echo "<p style='color: red;'>Продукты не выбраны.</p>";
+    }
 }
+
 ?>

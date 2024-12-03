@@ -1,38 +1,26 @@
-document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('productType').addEventListener('change', function () {
-        const typeSpecificFields = document.getElementById('type-specific-fields');
-        typeSpecificFields.innerHTML = ''; // Очистить текущие поля
+document.addEventListener('DOMContentLoaded', function() {
+    const productTypeSelect = document.getElementById('productType');
+    const dvdFields = document.getElementById('type-dvd');
+    const bookFields = document.getElementById('type-book');
+    const furnitureFields = document.getElementById('type-furniture');
 
-        const type = this.value;
+    function toggleFields() {
+        const selectedType = productTypeSelect.value;
 
-        console.log(type); // Добавьте вывод в консоль для отладки
+        dvdFields.classList.add('hidden');
+        bookFields.classList.add('hidden');
+        furnitureFields.classList.add('hidden');
 
-        if (type === 'DVD') {
-            typeSpecificFields.innerHTML = `
-                <label for="size">Size (MB)</label>
-                <input type="number" id="size" name="size" required>
-                <p>Product description: Please provide the size of the DVD in megabytes.</p>
-            `;
-        } else if (type === 'Book') {
-            typeSpecificFields.innerHTML = `
-                <label for="weight">Weight (KG)</label>
-                <input type="number" id="weight" name="weight" required>
-                <p>Product description: Please provide the weight of the book in kilograms.</p>
-            `;
-        } else if (type === 'Furniture') {
-            typeSpecificFields.innerHTML = `
-                <label for="height">Height (CM)</label>
-                <input type="number" id="height" name="height" required>
-
-                <label for="width">Width (CM)</label>
-                <input type="number" id="width" name="width" required>
-
-                <label for="length">Length (CM)</label>
-                <input type="number" id="length" name="length" required>
-                <p>Product description: Please provide dimensions in HxWxL format.</p>
-            `;
+        if (selectedType === 'DVD') {
+            dvdFields.classList.remove('hidden');
+        } else if (selectedType === 'Book') {
+            bookFields.classList.remove('hidden');
+        } else if (selectedType === 'Furniture') {
+            furnitureFields.classList.remove('hidden');
         }
-    });
+    }
+
+    productTypeSelect.addEventListener('change', toggleFields);
+    toggleFields(); // Вызов функции при загрузке страницы, чтобы правильно отобразить поля
 });
-
-
+ысф
